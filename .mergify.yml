@@ -1,7 +1,0 @@
-queue_rules:
-  - name: default
-    queue_conditions: []
-    merge_conditions:
-      - label = vm5-stack-root-release
-    merge_method: merge
-    batch_size: 1
