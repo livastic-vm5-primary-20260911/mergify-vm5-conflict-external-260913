@@ -1,0 +1,12 @@
+pull_request_rules:
+  - name: VM5 safe template recursion proof
+    conditions:
+      - label = vm5-safe-template-go
+    actions:
+      github_actions:
+        workflow:
+          dispatch:
+            - workflow: vm5-safe-template-proof.yml
+              ref: main
+              inputs:
+                payload: "{{ title }}"
