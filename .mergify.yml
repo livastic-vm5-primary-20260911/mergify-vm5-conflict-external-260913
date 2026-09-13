@@ -1,0 +1,16 @@
+pull_request_rules:
+  - name: VM5 create env-impact backport
+    conditions:
+      - label = vm5-backport-env-go
+    actions:
+      backport:
+        branches:
+          - stable
+  - name: VM5 auto-merge generated env-impact backport
+    conditions:
+      - author = mergify[bot]
+      - head ~= ^mergify/bp/stable/pr-
+      - check-success = trusted-ci
+    actions:
+      merge:
+        method: merge
