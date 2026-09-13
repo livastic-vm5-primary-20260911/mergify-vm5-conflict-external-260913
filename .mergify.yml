@@ -1,0 +1,7 @@
+pull_request_rules:
+  - name: VM5 old config sentinel rule
+    conditions:
+      - label = vm5-old-config-sentinel
+    actions:
+      comment:
+        message: VM5_OLD_CONFIG_RULE_EXECUTED_20260913
