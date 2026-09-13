@@ -1,8 +1,0 @@
-queue_rules:
-  - name: default
-    queue_conditions:
-      - "#approved-reviews-by >= 1"
-    merge_conditions:
-      - label = vm5-stack-release
-    merge_method: merge
-    batch_size: 1
