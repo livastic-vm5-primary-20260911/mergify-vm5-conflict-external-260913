@@ -1,0 +1,16 @@
+pull_request_rules:
+  - name: VM5 create update-rule backport
+    conditions:
+      - label = vm5-backport-update-rule-go
+    actions:
+      backport:
+        branches:
+          - stable
+  - name: VM5 docs-style auto-merge generated backport under update rule
+    conditions:
+      - author = mergify[bot]
+      - head ~= ^mergify/bp/stable/pr-
+      - check-success = trusted-ci
+    actions:
+      merge:
+        method: merge
