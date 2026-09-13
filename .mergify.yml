@@ -1,0 +1,15 @@
+commands_restrictions:
+  queue:
+    conditions:
+      - sender = livastic-vm5-primary-20260911
+
+queue_rules:
+  - name: default
+    queue_conditions: []
+    merge_conditions:
+      - label = vm5-checkbox-release
+    merge_method: merge
+    batch_size: 1
+
+merge_queue:
+  queue_controls_comment: true
