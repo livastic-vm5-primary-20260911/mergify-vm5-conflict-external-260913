@@ -1,7 +1,0 @@
-pull_request_rules:
-  - name: VM5 Merge-After reschedule proof
-    conditions:
-      - label = vm5-merge-after-go
-    actions:
-      merge:
-        method: merge
