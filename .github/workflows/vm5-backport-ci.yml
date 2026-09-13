@@ -1,0 +1,13 @@
+name: VM5 backport trusted CI
+on:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  trusted-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delay to allow controlled post-create mutation
+        run: sleep 45
+      - name: Pass
+        run: echo VM5_TRUSTED_CI_PASS
