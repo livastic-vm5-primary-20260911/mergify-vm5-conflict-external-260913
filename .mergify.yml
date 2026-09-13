@@ -1,8 +1,0 @@
-pull_request_rules:
-  - name: VM5 deterministic backport preclaim proof
-    conditions:
-      - label = vm5-backport-preclaim-go
-    actions:
-      backport:
-        branches:
-          - stable
