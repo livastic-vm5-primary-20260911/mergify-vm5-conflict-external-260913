@@ -1,0 +1,26 @@
+name: VM5 stable-only environment control
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  id-token: write
+jobs:
+  proof:
+    environment: vm5-stable-only-env
+    runs-on: ubuntu-latest
+    steps:
+      - name: Request OIDC claims
+        shell: python
+        run: |
+          import os, json, base64, urllib.request
+          url = os.environ["ACTIONS_ID_TOKEN_REQUEST_URL"]
+          sep = "&" if "?" in url else "?"
+          req = urllib.request.Request(url + sep + "audience=vm5-stable-only-proof", headers={"Authorization":"Bearer " + os.environ["ACTIONS_ID_TOKEN_REQUEST_TOKEN"]})
+          with urllib.request.urlopen(req) as resp:
+              token = json.load(resp)["value"]
+          p = token.split(".")[1]
+          p += "=" * (-len(p) % 4)
+          claims = json.loads(base64.urlsafe_b64decode(p.encode()))
+          print("VM5_STABLE_ENV_OIDC_ACCESSED")
+          for k in ["sub","ref","environment","actor","repository","aud"]:
+              print("OIDC_" + k.upper() + "=" + str(claims.get(k,"")))
