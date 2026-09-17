@@ -1,14 +1,23 @@
 pull_request_rules:
-  - name: vm5 isolated required-status freshness
+  - name: vm5 current custom-path guard autoqueue external-fork
     conditions:
-      - title ~= ^VM5_ISOLATED_STATUS_
       - -mergify-configuration-changed
     actions:
       queue:
 
 merge_queue:
-  mode: isolated
-  max_parallel_checks: 1
+  mode: parallel
+  max_parallel_checks: 2
+
+scopes:
+  source:
+    files:
+      critical:
+        include:
+          - critical/**/*
+      ordinary:
+        include:
+          - ordinary/**/*
 
 queue_rules:
   - name: default
