@@ -1,47 +1,112 @@
-name: vm5-custom-scope-external-fork
+name: CI
 
 on:
   pull_request:
-    branches: [main]
+    branches:
+      - main
+      - vm5-mq-poison-base-260918
 
 permissions:
   contents: read
+  actions: read
 
 jobs:
-  detect-scopes:
+  ci-gate:
     runs-on: ubuntu-24.04
-    outputs:
-      critical: ${{ fromJSON(steps.scopes.outputs.scopes).critical }}
     steps:
       - uses: actions/checkout@v5
         with:
           fetch-depth: 0
-      - name: Detect Mergify scopes from documented custom config path
-        id: scopes
-        uses: Mergifyio/gha-mergify-ci@v25
-        with:
-          action: scopes
-          mergify_config_path: .ci/mergify-scopes.yml
 
-  critical-required:
-    needs: detect-scopes
-    if: ${{ needs.detect-scopes.outputs.critical == 'true' }}
-    runs-on: ubuntu-24.04
-    steps:
-      - name: Deterministic critical regression detector
+      - name: Install the Mergify CLI
+        uses: Mergifyio/setup-cli@v2
+
+      - name: Read the merge queue metadata
+        id: queue-info
+        if: startsWith(github.event.pull_request.title, 'merge queue:')
+        continue-on-error: true
+        run: mergify ci queue-info
+
+      - name: Download the previously failed tests
+        id: failed-tests
+        if: steps.queue-info.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          QUEUE_METADATA: ${{ steps.queue-info.outputs.queue_metadata }}
         run: |
-          echo 'VM5_EXTERNAL_FORK_CUSTOM_SCOPE_CRITICAL_REGRESSION_DETECTED'
-          exit 1
+          fallback() { echo "$1, running the full test suite."; exit 0; }
+          sha=$(jq -r '.previous_failed_batches[-1].batch_pr_head_sha // empty' <<< "$QUEUE_METADATA")
+          [ -n "$sha" ] || fallback "No previous failed batch"
+          echo "VM5_PARENT_BATCH_SHA=$sha"
+          echo "VM5_CHILD_WAITING_FOR_LATEST_SAME_SHA_RUN"
+          sleep 90
+          run_id=$(gh run list --commit "$sha" --workflow CI --json databaseId -q '.[0].databaseId // empty')
+          [ -n "$run_id" ] || fallback "No CI run for the previous failed batch"
+          echo "VM5_SELECTED_PARENT_RUN_ID=$run_id"
+          gh run download "$run_id" --name failed-tests --dir previous-failed-tests || fallback "No failed-tests artifact"
+          echo "VM5_SELECTED_FAILED_TESTS=$(cat previous-failed-tests/failed-tests.txt)"
+          echo "tests=$(paste -sd ' ' previous-failed-tests/failed-tests.txt)" >> "$GITHUB_OUTPUT"
 
-  ci-gate:
-    if: ${{ !cancelled() }}
-    needs:
-      - detect-scopes
-      - critical-required
-    runs-on: ubuntu-24.04
-    steps:
-      - name: Aggregate official selective-CI jobs
-        uses: Mergifyio/gha-mergify-ci@v25
+      - name: Deterministic full or narrowed test suite
+        id: tests
+        env:
+          ONLY_TESTS: ${{ steps.failed-tests.outputs.tests }}
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          set -euo pipefail
+          failures=()
+          run_test() {
+            case "$1" in
+              critical-test)
+                if [ -f ordinary/a.txt ] && [ -f ordinary/b.txt ]; then
+                  echo 'VM5_CRITICAL_INTERACTION_REGRESSION_DETECTED'
+                  failures+=("critical-test")
+                else
+                  echo 'VM5_CRITICAL_TEST_PASS'
+                fi
+                ;;
+              harmless-test)
+                if [ "$BASE_REF" = "vm5-mq-poison-base-260918" ]; then
+                  echo 'VM5_ALT_BASE_HARMLESS_TEST_FAILURE'
+                  failures+=("harmless-test")
+                else
+                  echo 'VM5_HARMLESS_TEST_PASS'
+                fi
+                ;;
+              *)
+                echo "VM5_UNKNOWN_TEST_ID=$1"
+                failures+=("$1")
+                ;;
+            esac
+          }
+
+          if [ -n "$ONLY_TESTS" ]; then
+            echo "VM5_RE-RUNNING_ONLY=$ONLY_TESTS"
+            read -r -a selected <<< "$ONLY_TESTS"
+          elif [ "$BASE_REF" = "vm5-mq-poison-base-260918" ]; then
+            echo 'VM5_ALT_BASE_SUITE=harmless-test'
+            selected=("harmless-test")
+          else
+            echo 'VM5_FULL_SUITE=critical-test harmless-test'
+            selected=("critical-test" "harmless-test")
+          fi
+
+          : > failed-tests.txt
+          for test_id in "${selected[@]}"; do
+            run_test "$test_id"
+          done
+
+          if [ "${#failures[@]}" -gt 0 ]; then
+            printf '%s\n' "${failures[@]}" > failed-tests.txt
+            echo "VM5_FAILED_TESTS=$(paste -sd ' ' failed-tests.txt)"
+            exit 1
+          fi
+          echo 'VM5_TEST_SUITE_PASS'
+
+      - name: Upload the failed tests
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
-          action: wait-jobs
-          jobs: ${{ toJSON(needs) }}
+          name: failed-tests
+          path: failed-tests.txt
+          if-no-files-found: error
