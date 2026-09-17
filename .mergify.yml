@@ -1,7 +1,6 @@
 pull_request_rules:
-  - name: vm5 post-success native protection strengthening
+  - name: vm5 current custom-path guard autoqueue external-fork
     conditions:
-      - title ~= ^VM5_POSTSUCCESS_NATIVE_
       - -mergify-configuration-changed
     actions:
       queue:
@@ -22,8 +21,8 @@ scopes:
 
 queue_rules:
   - name: default
-    batch_size: 2
+    batch_size: 1
     queue_conditions: []
     merge_conditions:
       - check-success = @github-actions/ci-gate
-    merge_method: merge-batch
+    merge_method: merge
