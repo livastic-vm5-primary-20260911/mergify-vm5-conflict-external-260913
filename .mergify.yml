@@ -11,7 +11,13 @@ merge_queue:
 
 scopes:
   source:
-    manual:
+    files:
+      critical:
+        include:
+          - critical/**/*
+      ordinary:
+        include:
+          - ordinary/**/*
 
 queue_rules:
   - name: default
