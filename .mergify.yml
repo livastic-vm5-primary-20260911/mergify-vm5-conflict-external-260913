@@ -1,7 +1,8 @@
 pull_request_rules:
-  - name: vm5 current custom-path guard autoqueue external-fork
+  - name: vm5 direct-merge barrier invariant
     conditions:
       - -mergify-configuration-changed
+      - title ~= ^VM5_DM_QUEUE_
     actions:
       queue:
 
@@ -18,6 +19,9 @@ scopes:
       ordinary:
         include:
           - ordinary/**/*
+  barrier_files:
+    include:
+      - barrier/**/*
 
 queue_rules:
   - name: default
