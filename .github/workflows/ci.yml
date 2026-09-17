@@ -22,17 +22,17 @@ jobs:
         uses: Mergifyio/setup-cli@v1.3.0
 
       - name: Read the merge queue metadata
-        id: queue-info
+        id: queue_info
         if: startsWith(github.event.pull_request.title, 'merge queue:')
         continue-on-error: true
         run: mergify ci queue-info
 
       - name: Download the previously failed tests
         id: failed-tests
-        if: steps.queue-info.outcome == 'success'
+        if: steps.queue_info.outcome == 'success'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          QUEUE_METADATA: ${{ steps.queue-info.outputs.queue_metadata }}
+          QUEUE_METADATA: ${{ steps.queue_info.outputs.queue_metadata }}
         run: |
           fallback() { echo "$1, running the full test suite."; exit 0; }
           sha=$(jq -r '.previous_failed_batches[-1].batch_pr_head_sha // empty' <<< "$QUEUE_METADATA")
@@ -79,7 +79,6 @@ jobs:
                 ;;
             esac
           }
-
           if [ -n "$ONLY_TESTS" ]; then
             echo "VM5_RE-RUNNING_ONLY=$ONLY_TESTS"
             read -r -a selected <<< "$ONLY_TESTS"
@@ -90,12 +89,10 @@ jobs:
             echo 'VM5_FULL_SUITE=critical-test harmless-test'
             selected=("critical-test" "harmless-test")
           fi
-
           : > failed-tests.txt
           for test_id in "${selected[@]}"; do
             run_test "$test_id"
           done
-
           if [ "${#failures[@]}" -gt 0 ]; then
             printf '%s\n' "${failures[@]}" > failed-tests.txt
             echo "VM5_FAILED_TESTS=$(paste -sd ' ' failed-tests.txt)"
