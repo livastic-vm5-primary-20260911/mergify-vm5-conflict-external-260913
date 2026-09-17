@@ -19,7 +19,7 @@ jobs:
           fetch-depth: 0
 
       - name: Install the Mergify CLI
-        uses: Mergifyio/setup-cli@v2
+        uses: Mergifyio/setup-cli@v1.3.0
 
       - name: Read the merge queue metadata
         id: queue-info
