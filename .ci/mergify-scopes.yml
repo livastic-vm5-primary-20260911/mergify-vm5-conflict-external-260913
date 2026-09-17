@@ -3,9 +3,6 @@ scopes:
     files:
       critical:
         include:
-          - never-matches-vm5/**/*
-      attacker-controlled-lane:
-        include:
           - critical/**/*
       ordinary:
         include:
