@@ -1,7 +1,7 @@
 pull_request_rules:
   - name: vm5 isolated required-status freshness
     conditions:
-      - title = VM5_ISOLATED_STATUS_FRESHNESS
+      - title ~= ^VM5_ISOLATED_STATUS_
       - -mergify-configuration-changed
     actions:
       queue:
