@@ -1,6 +1,7 @@
 pull_request_rules:
-  - name: vm5 current custom-path guard autoqueue external-fork
+  - name: vm5 failed-tests latest-run provenance batch
     conditions:
+      - title ~= ^VM5_MQ_ARTIFACT_
       - -mergify-configuration-changed
     actions:
       queue:
@@ -12,17 +13,16 @@ merge_queue:
 scopes:
   source:
     files:
-      critical:
-        include:
-          - critical/**/*
       ordinary:
         include:
           - ordinary/**/*
 
 queue_rules:
   - name: default
-    batch_size: 1
+    batch_size: 3
+    batch_max_wait_time: 5 minutes
+    batch_max_failure_resolution_attempts: 4
     queue_conditions: []
     merge_conditions:
       - check-success = @github-actions/ci-gate
-    merge_method: merge
+    merge_method: merge-batch
