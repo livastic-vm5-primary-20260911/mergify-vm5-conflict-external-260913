@@ -1,28 +1,15 @@
-pull_request_rules:
-  - name: vm5 failed-tests latest-run provenance batch
-    conditions:
-      - title ~= ^VM5_MQ_ARTIFACT_
-      - -mergify-configuration-changed
-    actions:
-      queue:
-
-merge_queue:
-  mode: parallel
-  max_parallel_checks: 2
-
-scopes:
-  source:
-    files:
-      ordinary:
-        include:
-          - ordinary/**/*
-
 queue_rules:
-  - name: default
-    batch_size: 3
-    batch_max_wait_time: 5 minutes
-    batch_max_failure_resolution_attempts: 4
+  - name: manual-first
     queue_conditions: []
+    merge_conditions: []
+    merge_method: merge
+    merge_bot_account: livastic-vm5-primary-20260911
+    autoqueue: false
+  - name: auto-second
+    queue_conditions:
+      - title = VM5 BOTACCOUNT MIGRATION CHAIN 260922
     merge_conditions:
-      - check-success = @github-actions/ci-gate
-    merge_method: merge-batch
+      - check-success = vm5-never-pass-botaccount-migration-260922
+    merge_method: merge
+    merge_bot_account: livastic-vm5-primary-20260911
+    autoqueue: true
