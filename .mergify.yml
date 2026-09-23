@@ -19,6 +19,7 @@ scopes:
 
 queue_rules:
   - name: default
+    autoqueue: false
     batch_size: 3
     batch_max_wait_time: 5 minutes
     batch_max_failure_resolution_attempts: 4
