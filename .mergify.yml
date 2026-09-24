@@ -1,14 +1,4 @@
 pull_request_rules:
-  - name: VM5 lowpriv base-only conflict title trigger 20260925
-    conditions:
-      - author = livastic-vm5-secondary-20260911
-      - base = main
-      - title = VM5_CONFLICT_TITLE_TRIGGER_20260925
-      - -conflict
-    actions:
-      comment:
-        message: VM5_CONFLICT_TITLE_LOWPRIV_STALE_20260925
-
   - name: vm5 failed-tests latest-run provenance batch
     conditions:
       - title ~= ^VM5_MQ_ARTIFACT_
