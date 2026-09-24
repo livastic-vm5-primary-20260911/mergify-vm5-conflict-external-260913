@@ -16,6 +16,7 @@ scopes:
       alpha:
         include:
           - vm5-direct-alpha/**/*
+          - zzzz-direct-alpha/**/*
       beta:
         include:
           - vm5-direct-beta/**/*
