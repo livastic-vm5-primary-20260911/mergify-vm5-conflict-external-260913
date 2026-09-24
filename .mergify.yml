@@ -1,15 +1,4 @@
 pull_request_rules:
-  - name: VM5 lowpriv scheduler conflict trigger 20260925
-    conditions:
-      - author = livastic-vm5-secondary-20260911
-      - base = main
-      - title = VM5_CONFLICT_SCHED_LOWPRIV_20260925
-      - -conflict
-      - current-datetime >= 2026-09-24T16:00:52Z
-    actions:
-      comment:
-        message: VM5_CONFLICT_SCHED_LOWPRIV_STALE_20260925
-
   - name: vm5 failed-tests latest-run provenance batch
     conditions:
       - title ~= ^VM5_MQ_ARTIFACT_
