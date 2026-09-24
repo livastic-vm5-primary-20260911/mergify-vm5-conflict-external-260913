@@ -1,8 +1,8 @@
 pull_request_rules:
-  - name: VM5 direct merge scope positive control 20260925
+  - name: vm5 failed-tests latest-run provenance batch
     conditions:
-      - base = vm5-direct-scope-base-20260925
-      - title ~= ^VM5_DIRECT_SCOPE_(BETA|ALPHA)_20260925$
+      - title ~= ^VM5_MQ_ARTIFACT_
+      - -mergify-configuration-changed
     actions:
       queue:
 
@@ -13,17 +13,16 @@ merge_queue:
 scopes:
   source:
     files:
-      alpha:
+      ordinary:
         include:
-          - vm5-direct-alpha/**/*
-          - zzzz-direct-alpha/**/*
-      beta:
-        include:
-          - vm5-direct-beta/**/*
+          - ordinary/**/*
 
 queue_rules:
   - name: default
-    batch_size: 1
+    batch_size: 3
+    batch_max_wait_time: 5 minutes
+    batch_max_failure_resolution_attempts: 4
     queue_conditions: []
-    merge_conditions: []
-    merge_method: merge
+    merge_conditions:
+      - check-success = @github-actions/ci-gate
+    merge_method: merge-batch
