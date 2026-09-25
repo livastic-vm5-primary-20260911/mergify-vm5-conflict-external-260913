@@ -20,9 +20,9 @@ scopes:
 queue_rules:
   - name: default
     batch_size: 3
-    batch_max_wait_time: 5 minutes
+    batch_max_wait_time: 1 second
     batch_max_failure_resolution_attempts: 4
     queue_conditions: []
     merge_conditions:
-      - check-success = @github-actions/ci-gate
+      - check-success = vm5-never-pass-20260925
     merge_method: merge-batch
