@@ -1,28 +1,14 @@
-pull_request_rules:
-  - name: vm5 failed-tests latest-run provenance batch
-    conditions:
-      - title ~= ^VM5_MQ_ARTIFACT_
-      - -mergify-configuration-changed
-    actions:
-      queue:
-
-merge_queue:
-  mode: parallel
-  max_parallel_checks: 2
-
-scopes:
-  source:
-    files:
-      ordinary:
-        include:
-          - ordinary/**/*
-
 queue_rules:
   - name: default
-    batch_size: 3
-    batch_max_wait_time: 5 minutes
-    batch_max_failure_resolution_attempts: 4
     queue_conditions: []
     merge_conditions:
-      - check-success = @github-actions/ci-gate
-    merge_method: merge-batch
+      - title ~= ^VM5_SKIP_ALLOW_
+      - check-success = vm5-green
+    merge_method: merge
+    batch_size: 1
+    max_checks_retries: 0
+
+merge_queue:
+  mode: serial
+  max_parallel_checks: 2
+  skip_intermediate_results: true
