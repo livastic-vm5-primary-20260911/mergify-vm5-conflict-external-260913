@@ -1,0 +1,26 @@
+name: VM5 MQ Speculative Secret Probe
+
+on:
+  push:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe controlled repository secret
+        shell: bash
+        env:
+          PROBE: ${{ secrets.VM5_MQ_SPECULATIVE_PROBE_20260925 }}
+        run: |
+          set -euo pipefail
+          if [ -z "${PROBE:-}" ]; then
+            echo "VM5_MQ_SECRET_PRESENT=0"
+          else
+            echo "VM5_MQ_SECRET_PRESENT=1"
+          fi
+          echo "VM5_REPOSITORY=$GITHUB_REPOSITORY"
+          echo "VM5_REF=$GITHUB_REF"
+          echo "VM5_SHA=$GITHUB_SHA"
