@@ -1,28 +1,9 @@
 pull_request_rules:
-  - name: vm5 failed-tests latest-run provenance batch
+  - name: VM5 fresh timer label-rename revocation discriminator
     conditions:
-      - title ~= ^VM5_MQ_ARTIFACT_
-      - -mergify-configuration-changed
+      - label = vm5-timer-fresh-approval-old
+      - title = VM5_TIMER_LABEL_RENAME_FRESH_20260925
+      - current-datetime >= 2026-09-25T12:51:30Z
     actions:
-      queue:
-
-merge_queue:
-  mode: parallel
-  max_parallel_checks: 2
-
-scopes:
-  source:
-    files:
-      ordinary:
-        include:
-          - ordinary/**/*
-
-queue_rules:
-  - name: default
-    batch_size: 3
-    batch_max_wait_time: 5 minutes
-    batch_max_failure_resolution_attempts: 4
-    queue_conditions: []
-    merge_conditions:
-      - check-success = @github-actions/ci-gate
-    merge_method: merge-batch
+      merge:
+        method: squash
