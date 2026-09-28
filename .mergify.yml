@@ -5,7 +5,6 @@ queue_rules:
       - title ~= ^VM5_SKIP_ALLOW_
       - check-success = vm5-green
     merge_method: merge
-    branch_protection_injection_mode: merge
     batch_size: 1
     max_checks_retries: 0
 
