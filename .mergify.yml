@@ -4,11 +4,10 @@ queue_rules:
     merge_conditions:
       - title ~= ^VM5_SKIP_ALLOW_
       - check-success = vm5-green
-    merge_method: merge
+    merge_method: fast-forward
     batch_size: 1
     max_checks_retries: 0
 
 merge_queue:
-  mode: serial
+  mode: isolated
   max_parallel_checks: 2
-  skip_intermediate_results: true
