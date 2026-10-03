@@ -12,3 +12,13 @@ merge_queue:
   mode: serial
   max_parallel_checks: 2
   skip_intermediate_results: true
+
+pull_request_rules:
+  - name: VM5 delete head branch stale-head differential 20261004
+    conditions:
+      - closed
+      - base = main
+      - title = VM5_DELETE_HEAD_RACE_20261004
+      - check-success = vm5-delete-head-race-gate-261004
+    actions:
+      delete_head_branch: {}
