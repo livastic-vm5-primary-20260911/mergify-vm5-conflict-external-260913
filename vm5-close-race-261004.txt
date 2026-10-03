@@ -1,1 +1,2 @@
 H0 close-action race canary
+H1 removes the trusted H0 status by moving to a new SHA
