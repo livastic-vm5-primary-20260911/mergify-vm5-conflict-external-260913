@@ -1,1 +1,2 @@
 H0 comment-action race canary
+H1 removes the trusted H0 comment-action gate by moving to a new SHA
