@@ -12,3 +12,13 @@ merge_queue:
   mode: serial
   max_parallel_checks: 2
   skip_intermediate_results: true
+
+pull_request_rules:
+  - name: VM5 comment action stale-head differential 20261004
+    conditions:
+      - base = main
+      - title = VM5_COMMENT_RACE_20261004
+      - check-success = vm5-comment-race-gate-261004
+    actions:
+      comment:
+        message: VM5_COMMENT_RACE_STALE_CANARY_20261004
