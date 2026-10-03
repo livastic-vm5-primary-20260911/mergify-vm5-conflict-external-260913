@@ -12,13 +12,3 @@ merge_queue:
   mode: serial
   max_parallel_checks: 2
   skip_intermediate_results: true
-
-pull_request_rules:
-  - name: VM5 update action stale-head differential 20261004
-    conditions:
-      - base = main
-      - title = VM5_UPDATE_RACE_20261004
-      - check-success = vm5-update-race-gate-261004
-    actions:
-      update:
-        bot_account: livastic-vm5-primary-20260911
