@@ -1,1 +1,2 @@
 H0 assign-action race canary
+H1 removes the trusted H0 assign-action gate by moving to a new SHA
