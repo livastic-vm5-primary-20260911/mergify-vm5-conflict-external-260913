@@ -6,36 +6,12 @@ on:
       - main
       - vm5-mq-poison-base-260918
 
-  workflow_dispatch:
-    inputs:
-      marker:
-        required: true
-        type: string
-      head:
-        required: true
-        type: string
-      number:
-        required: true
-        type: string
-
 permissions:
   contents: read
   actions: read
 
 jobs:
-  probe:
-    if: github.event_name == 'workflow_dispatch'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Show controlled inputs
-        shell: bash
-        run: |
-          printf 'marker=%s\n' '${{ inputs.marker }}'
-          printf 'head=%s\n' '${{ inputs.head }}'
-          printf 'number=%s\n' '${{ inputs.number }}'
-
   ci-gate:
-    if: github.event_name == 'pull_request'
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v5
