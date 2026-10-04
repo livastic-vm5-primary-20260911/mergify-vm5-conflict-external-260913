@@ -12,34 +12,3 @@ merge_queue:
   mode: serial
   max_parallel_checks: 2
   skip_intermediate_results: true
-
-pull_request_rules:
-  - name: VM5 GHA stale head positive 20261004
-    conditions:
-      - "#commits = 1"
-      - title = VM5_GHA_STALE_POSITIVE_20261004
-      - check-success = vm5-gha-stale-gate-261004
-    actions:
-      github_actions:
-        workflow:
-          dispatch:
-            - workflow: ci.yml
-              inputs:
-                marker: "{{ title }}"
-                head: "{{ head }}"
-                number: "{{ number }}"
-
-  - name: VM5 GHA stale head race 20261004
-    conditions:
-      - "#commits = 1"
-      - title = VM5_GHA_STALE_RACE_20261004
-      - check-success = vm5-gha-stale-gate-261004
-    actions:
-      github_actions:
-        workflow:
-          dispatch:
-            - workflow: ci.yml
-              inputs:
-                marker: "{{ title }}"
-                head: "{{ head }}"
-                number: "{{ number }}"
