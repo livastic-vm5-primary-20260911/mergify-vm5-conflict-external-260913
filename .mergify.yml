@@ -1,3 +1,14 @@
+pull_request_rules:
+  - name: VM5 current label add stale-head freshness 261004
+    conditions:
+      - base = main
+      - title = VM5_LABEL_ADD_STALE_CURRENT_20261004
+      - check-success = vm5-label-add-current-gate-261004
+    actions:
+      label:
+        add:
+          - vm5-stale-add-current-261004
+
 queue_rules:
   - name: default
     queue_conditions: []
