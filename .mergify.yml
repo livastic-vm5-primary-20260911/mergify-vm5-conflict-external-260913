@@ -14,9 +14,9 @@ merge_queue:
   skip_intermediate_results: true
 
 pull_request_rules:
-  - name: VM5 edit draft positive control
+  - name: VM5 edit draft stale head discriminator
     conditions:
-      - title = VM5_EDIT_DRAFT_POSITIVE_20261004
+      - title = VM5_EDIT_DRAFT_STALE_20261004
       - check-success = vm5-edit-draft-gate
     actions:
       edit:
