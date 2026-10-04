@@ -1,1 +1,2 @@
 VM5 label.add stale-head H0 canary 261004
+VM5 label.add stale-head H1 canary 261004
