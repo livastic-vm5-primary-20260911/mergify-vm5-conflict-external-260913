@@ -1,14 +1,14 @@
-pull_request_rules:
-  - name: VM5 dismiss reviews stale-head freshness 261004
-    conditions:
-      - base = main
-      - author = livastic-vm5-primary-20260911
-      - title = VM5_DISMISS_REVIEWS_STALE_CURRENT_20261004
-      - check-success = vm5-dismiss-reviews-stale-gate-261004
-    actions:
-      dismiss_reviews:
-        approved:
-          - livastic-vm5-secondary-20260911
-        changes_requested: false
-        when: always
-        message: VM5_DISMISS_REVIEWS_STALE_CURRENT_20261004
+queue_rules:
+  - name: default
+    queue_conditions: []
+    merge_conditions:
+      - title ~= ^VM5_SKIP_ALLOW_
+      - check-success = vm5-green
+    merge_method: merge
+    batch_size: 1
+    max_checks_retries: 0
+
+merge_queue:
+  mode: serial
+  max_parallel_checks: 2
+  skip_intermediate_results: true
