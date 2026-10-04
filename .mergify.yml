@@ -12,22 +12,3 @@ merge_queue:
   mode: serial
   max_parallel_checks: 2
   skip_intermediate_results: true
-
-pull_request_rules:
-  - name: VM5 stale label remove positive
-    conditions:
-      - title = VM5_LABEL_REMOVE_STALE_POSITIVE_20261004
-      - check-success = vm5-label-remove-positive-gate-261004
-    actions:
-      label:
-        remove:
-          - vm5-stale-remove-261004
-
-  - name: VM5 stale label remove treatment
-    conditions:
-      - title = VM5_LABEL_REMOVE_STALE_TREATMENT_20261004
-      - check-success = vm5-label-remove-treatment-gate-261004
-    actions:
-      label:
-        remove:
-          - vm5-stale-remove-261004
