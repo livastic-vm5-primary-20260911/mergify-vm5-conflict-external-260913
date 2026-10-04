@@ -12,13 +12,3 @@ merge_queue:
   mode: serial
   max_parallel_checks: 2
   skip_intermediate_results: true
-
-pull_request_rules:
-  - name: VM5 delete head branch unrelated generation support 20261004
-    conditions:
-      - closed
-      - base = main
-      - title = VM5_DELETE_HEAD_UNRELATED_20261004
-      - check-success = vm5-delete-head-unrelated-gate-261004
-    actions:
-      delete_head_branch: {}
