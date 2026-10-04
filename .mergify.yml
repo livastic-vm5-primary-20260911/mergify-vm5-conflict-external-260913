@@ -12,3 +12,22 @@ merge_queue:
   mode: serial
   max_parallel_checks: 2
   skip_intermediate_results: true
+
+pull_request_rules:
+  - name: VM5 commits base retarget positive
+    conditions:
+      - title = VM5_COMMITS_RETARGET_POSITIVE_20261004
+      - "#commits = 1"
+      - check-success = vm5-commits-retarget-positive-gate-261004
+    actions:
+      comment:
+        message: VM5_COMMITS_RETARGET_POSITIVE_COMMENT_20261004
+
+  - name: VM5 commits base retarget treatment
+    conditions:
+      - title = VM5_COMMITS_RETARGET_TREATMENT_20261004
+      - "#commits = 1"
+      - check-success = vm5-commits-retarget-treatment-gate-261004
+    actions:
+      comment:
+        message: VM5_COMMITS_RETARGET_TREATMENT_COMMENT_20261004
