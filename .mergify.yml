@@ -1,3 +1,14 @@
+pull_request_rules:
+  - name: VM5 current post_check stale-head freshness 261004
+    conditions:
+      - base = main
+      - title = VM5_POSTCHECK_STALE_CURRENT_20261004
+      - check-success = vm5-postcheck-stale-current-gate-261004
+    actions:
+      post_check:
+        title: VM5_CURRENT_STALE_POSTCHECK_20261004
+        summary: VM5 current H0-only gate stale-head post_check freshness probe
+
 queue_rules:
   - name: default
     queue_conditions: []
